@@ -50,4 +50,35 @@ public class TakeAwayBillTest {
             fail();
         }
     }
+	
+	@Test
+    public void sconto_piu_di_50_euro() {
+        TakeAwayBillImpl bill = new TakeAwayBillImpl();
+        User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
+        List<MenuItem> ord = new ArrayList<MenuItem>();
+        ord.add(new MenuItem(itemType.Budini, "Pistacchio", 25));
+        ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 25));
+        ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 11));
+        try {
+            assertEquals(bill.getOrderPrice(ord, u, LocalTime.of(18, 26)), 54.9, 0.0001);
+        } catch (RestaurantBillException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void sconto_piu_di_5_gelati_e_piu_di_50_euro() {
+        TakeAwayBillImpl bill = new TakeAwayBillImpl();
+        User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
+        List<MenuItem> ord = new ArrayList<MenuItem>();
+        for(int i=0;i<6;i++) {
+            ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 10));
+        }
+        try {
+            assertEquals(bill.getOrderPrice(ord, u, LocalTime.of(18, 26)), 49.5, 0.0001);
+        } catch (RestaurantBillException e) {
+            fail();
+        }
+    }
+
 }
