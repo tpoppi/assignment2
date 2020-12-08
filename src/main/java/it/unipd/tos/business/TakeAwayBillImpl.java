@@ -18,10 +18,29 @@ public class TakeAwayBillImpl implements TakeAwayBill {
     private List<User> free_ords = new ArrayList<User>();
     
     public double getOrderPrice(List<MenuItem> itemsOrdered, User user, LocalTime time) throws RestaurantBillException {
-    	double price=0;
+    	double price = 0;
+        int n_gelati = 0;
+        double min_price_gelati = 0;
+        boolean first = false;
+        
     	for (int i = 0; i < itemsOrdered.size(); i++) {
-    		price += itemsOrdered.get(i).getPrice();
-    	}
+            
+            if (itemsOrdered.get(i).getType() == itemType.Gelati) {
+                n_gelati++;
+                if (!first) {
+                    min_price_gelati = itemsOrdered.get(i).getPrice();
+                    first = true;
+                } else if (min_price_gelati > itemsOrdered.get(i).getPrice()) {
+                    min_price_gelati = itemsOrdered.get(i).getPrice();
+                }
+            }
+            price += itemsOrdered.get(i).getPrice();
+        }
+        
+        // sconto più di 5 gelati
+        if (n_gelati > 5) {
+            price -= (min_price_gelati / 2);
+        }
     	return price;
     }
 
