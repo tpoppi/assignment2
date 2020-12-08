@@ -44,6 +44,7 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         // sconto più di 5 gelati
         if (n_gelati > 5) {
             price -= (min_price_gelati / 2);
+            tot_bud_gel -= (min_price_gelati / 2);
         }
         
         //sconto più di 50 euro
@@ -56,6 +57,12 @@ public class TakeAwayBillImpl implements TakeAwayBill {
             throw new RestaurantBillException();
         }
         
+
+        //commissione con meno di 10 euro
+        if (price < 10) {
+            price += 0.5;
+        }
+
     	return price;
     }
 
