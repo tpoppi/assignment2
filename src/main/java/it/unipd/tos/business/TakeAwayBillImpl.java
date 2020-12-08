@@ -16,17 +16,17 @@ import it.unipd.tos.model.User;
 
 public class TakeAwayBillImpl implements TakeAwayBill {
     private List<User> free_ords = new ArrayList<User>();
-    
+
     public double getOrderPrice(List<MenuItem> itemsOrdered, User user, LocalTime time) throws RestaurantBillException {
-    	double price = 0;
+        double price = 0;
         int n_gelati = 0;
         double min_price_gelati = 0;
         boolean first = false;
         double tot_bud_gel = 0;
-        
-    	for (int i = 0; i < itemsOrdered.size(); i++) {
-    		
-    		if (itemsOrdered.get(i).getType() == itemType.Gelati || itemsOrdered.get(i).getType() == itemType.Budini) {
+
+        for (int i = 0; i < itemsOrdered.size(); i++) {
+
+            if (itemsOrdered.get(i).getType() == itemType.Gelati || itemsOrdered.get(i).getType() == itemType.Budini) {
                 tot_bud_gel += itemsOrdered.get(i).getPrice();
             }
             if (itemsOrdered.get(i).getType() == itemType.Gelati) {
@@ -40,30 +40,29 @@ public class TakeAwayBillImpl implements TakeAwayBill {
             }
             price += itemsOrdered.get(i).getPrice();
         }
-        
+
         // sconto più di 5 gelati
         if (n_gelati > 5) {
             price -= (min_price_gelati / 2);
             tot_bud_gel -= (min_price_gelati / 2);
         }
-        
-        //sconto più di 50 euro
+
+        // sconto più di 50 euro
         if (tot_bud_gel > 50) {
             price -= price * 0.1;
         }
 
-      //eccezione più di 30 elementi
+        // eccezione più di 30 elementi
         if (itemsOrdered.size() > 30) {
             throw new RestaurantBillException();
         }
-        
 
-        //commissione con meno di 10 euro
+        // commissione con meno di 10 euro
         if (price < 10) {
             price += 0.5;
         }
-      
-        //regalare 10 ordini ai minorenni dalle 18 alle 19
+
+        // regalare 10 ordini ai minorenni dalle 18 alle 19
         Period under = Period.between(user.getDate(), LocalDate.now());
         if (under.getYears() < 18 && time.isAfter(LocalTime.of(18, 0, 0)) && time.isBefore(LocalTime.of(19, 0, 0))
                 && free_ords.size() < 10) {
@@ -81,7 +80,7 @@ public class TakeAwayBillImpl implements TakeAwayBill {
             }
         }
 
-    	return price;
+        return price;
     }
 
 }

@@ -17,10 +17,9 @@ import java.time.*;
 
 import org.junit.Test;
 
-
 public class TakeAwayBillTest {
-	
-	@Test
+
+    @Test
     public void controllo_totale() {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Armando", LocalDate.of(1998, 6, 11));
@@ -33,13 +32,13 @@ public class TakeAwayBillTest {
             fail();
         }
     }
-	
-	@Test
+
+    @Test
     public void sconto_piu_di_5_gelati() {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Gianluca", LocalDate.of(1999, 6, 11));
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<6;i++) {
+        for (int i = 0; i < 6; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 3));
         }
         ord.add(new MenuItem(itemType.Budini, "Cioccolata", 5));
@@ -50,8 +49,8 @@ public class TakeAwayBillTest {
             fail();
         }
     }
-	
-	@Test
+
+    @Test
     public void sconto_piu_di_50_euro() {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
@@ -71,7 +70,7 @@ public class TakeAwayBillTest {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<6;i++) {
+        for (int i = 0; i < 6; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 10));
         }
         try {
@@ -80,24 +79,24 @@ public class TakeAwayBillTest {
             fail();
         }
     }
-    
-    @Test(expected=RestaurantBillException.class)
+
+    @Test(expected = RestaurantBillException.class)
     public void eccezione_piu_di_30_elementi() throws RestaurantBillException {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<35;i++) {
+        for (int i = 0; i < 35; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 3));
         }
         bill.getOrderPrice(ord, u, LocalTime.of(18, 23));
     }
-    
+
     @Test
     public void commissione_meno_di_10_euro() {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<5;i++) {
+        for (int i = 0; i < 5; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 1));
         }
         try {
@@ -112,7 +111,7 @@ public class TakeAwayBillTest {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<4;i++) {
+        for (int i = 0; i < 4; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 10));
         }
         ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 6));
@@ -123,13 +122,13 @@ public class TakeAwayBillTest {
             fail();
         }
     }
-    
+
     @Test
     public void scontoMinorenni() {
         TakeAwayBillImpl bill = new TakeAwayBillImpl();
         User u = new User(1, "Tommaso", LocalDate.of(2004, 5, 3));
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<5;i++) {
+        for (int i = 0; i < 5; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 10));
         }
         try {
@@ -154,18 +153,18 @@ public class TakeAwayBillTest {
         utenti.add(new User(14, "Franco", LocalDate.of(2008, 6, 8)));
 
         List<MenuItem> ord = new ArrayList<MenuItem>();
-        for(int i=0;i<5;i++) {
+        for (int i = 0; i < 5; i++) {
             ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 10));
         }
         try {
-            //maggiorenni a cui non si puo applicare lo sconto
+            // maggiorenni a cui non si puo applicare lo sconto
             assertEquals(bill.getOrderPrice(ord, utenti.get(13), LocalTime.of(18, 26, 24)), 50, 0.0001);
             assertEquals(bill.getOrderPrice(ord, utenti.get(13), LocalTime.of(16, 26, 24)), 50, 0.0001);
             assertEquals(bill.getOrderPrice(ord, utenti.get(13), LocalTime.of(20, 26, 24)), 50, 0.0001);
-            //minorenni a cui non vengono applicati gli sconti
+            // minorenni a cui non vengono applicati gli sconti
             assertEquals(bill.getOrderPrice(ord, utenti.get(14), LocalTime.of(17, 26, 24)), 50, 0.0001);
             assertEquals(bill.getOrderPrice(ord, utenti.get(14), LocalTime.of(21, 26, 24)), 50, 0.0001);
-            //minorenni a cui vengono applicati gli sconti
+            // minorenni a cui vengono applicati gli sconti
             assertEquals(bill.getOrderPrice(ord, utenti.get(0), LocalTime.of(18, 26, 24)), 0.00, 0.0001);
             for (int i = 0; i < 10; i++) {
                 if (i == 0) {
@@ -174,16 +173,16 @@ public class TakeAwayBillTest {
                     assertEquals(bill.getOrderPrice(ord, utenti.get(i), LocalTime.of(18, 26, 24)), 0.00, 0.0001);
                 }
             }
-            //maggiorenni che non vengono scontati
+            // maggiorenni che non vengono scontati
             assertEquals(bill.getOrderPrice(ord, utenti.get(10), LocalTime.of(18, 26, 25)), 50, 0.0001);
             assertEquals(bill.getOrderPrice(ord, utenti.get(11), LocalTime.of(18, 26, 29)), 50, 0.0001);
-            // Minorenni che non vengono scontati perchè abbiamo raggiunto il massimo degli sconti
+            // Minorenni che non vengono scontati perchè abbiamo raggiunto il massimo degli
+            // sconti
             assertEquals(bill.getOrderPrice(ord, utenti.get(12), LocalTime.of(18, 26, 24)), 50, 0.0001);
 
         } catch (RestaurantBillException e) {
             fail();
         }
     }
-
 
 }
