@@ -80,5 +80,16 @@ public class TakeAwayBillTest {
             fail();
         }
     }
+    
+    @Test(expected=RestaurantBillException.class)
+    public void eccezione_piu_di_30_elementi() throws RestaurantBillException {
+        TakeAwayBillImpl bill = new TakeAwayBillImpl();
+        User u = new User(1, "Tommaso", LocalDate.of(1999, 5, 3));
+        List<MenuItem> ord = new ArrayList<MenuItem>();
+        for(int i=0;i<35;i++) {
+            ord.add(new MenuItem(itemType.Gelati, "Pistacchio", 3));
+        }
+        bill.getOrderPrice(ord, u, LocalTime.of(18, 23));
+    }
 
 }

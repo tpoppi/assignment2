@@ -50,6 +50,11 @@ public class TakeAwayBillImpl implements TakeAwayBill {
         if (tot_bud_gel > 50) {
             price -= price * 0.1;
         }
+
+      //eccezione più di 30 elementi
+        if (itemsOrdered.size() > 30) {
+            throw new RestaurantBillException();
+        }
         
     	return price;
     }
